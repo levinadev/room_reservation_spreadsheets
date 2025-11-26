@@ -33,4 +33,8 @@ async def get_report(
         wrapper_services: Aiogoogle = Depends(get_service)
 
 ):
-    pass
+    """Только для суперюзеров."""
+    reservations = await reservation_crud.get_count_res_at_the_same_time(
+        from_reserve, to_reserve, session
+    )
+    return reservations

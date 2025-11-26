@@ -1,7 +1,7 @@
 # app/core/config.py
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
-from pydantic import BaseSettings, EmailStr
+from pydantic import EmailStr
 
 class Settings(BaseSettings):
     app_title: str = 'Бронирование переговорок'
