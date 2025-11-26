@@ -12,6 +12,8 @@ from app.core.google_client import get_service
 from app.core.user import current_superuser
 
 from app.crud.reservation import reservation_crud
+from app.services.google_api import update_spreadsheets_value
+
 # Создаём экземпляр класса APIRouter
 router = APIRouter()
 
@@ -31,7 +33,6 @@ async def get_report(
         session: AsyncSession = Depends(get_async_session),
         # «Обёртка»
         wrapper_services: Aiogoogle = Depends(get_service)
-
 ):
     """
     Получение данных о том сколько раз за указанный
@@ -42,4 +43,16 @@ async def get_report(
     reservations = await reservation_crud.get_count_res_at_the_same_time(
         from_reserve, to_reserve, session
     )
+
+    SPREADSHEET_ID = "1zlOpNuqh0-M7C1lms4kliXNEhOzCxmb83Rc1XGte0KI"
+
+    # Вызов функций
+    # spreadsheetid = await create_spreadsheets(wrapper_services)
+    # await set_user_permissions(spreadsheetid, wrapper_services)
+    await update_spreadsheets_value(
+        SPREADSHEET_ID,
+        reservations,
+        wrapper_services
+    )
+
     return reservations
