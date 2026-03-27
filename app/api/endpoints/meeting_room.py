@@ -1,4 +1,3 @@
-# app/api/meeting_room.py
 from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, Depends
@@ -9,15 +8,12 @@ from app.api.validators import check_name_duplicate, check_meeting_room_exists
 from app.crud.meeting_room import meeting_room_crud
 from app.crud.reservation import reservation_crud
 
-from app.models.meeting_room import MeetingRoom
 from app.schemas.meeting_room import (
     MeetingRoomCreate,
     MeetingRoomDB, MeetingRoomUpdate
 )
 from app.core.db import get_async_session
 from app.schemas.reservation import ReservationDB
-# Добавьте импорт зависимости, определяющей,
-# что текущий пользователь - суперюзер.
 from app.core.user import current_superuser
 
 router = APIRouter()
@@ -27,10 +23,8 @@ SessionDep = Annotated[AsyncSession, Depends(get_async_session)]
 
 @router.post(
     '/',
-    # Указываем, что функция должна вернуть объект типа MeetingRoomDB.
     response_model=MeetingRoomDB,
     response_model_exclude_none=True,
-    # Добавьте вызов зависимости при обработке запроса.
     dependencies=[Depends(current_superuser)],
 )
 async def create_new_meeting_room(
@@ -55,7 +49,7 @@ async def get_all_meeting_rooms(
         session: SessionDep,
 ):
     """
-    Роутер для получения всех переговорныхз комнат.
+    Роутер для получения всех переговорных комнат.
     """
     all_rooms = await meeting_room_crud.get_multi(session)
     return all_rooms
@@ -74,17 +68,13 @@ async def partially_update_meeting_room(
     """
     Роутер для обновления переговорки. Только для суперюзеров."
     """
-    # Вызываем check_meeting_room_exists(): пытаемся получить по id объект из БД.
-    # В ответ ожидаем либо None, либо объект класса MeetingRoom.
     meeting_room = await check_meeting_room_exists(
         meeting_room_id,
         session
     )
     if obj_in.name is not None:
-        # Если в запросе получено поле name — проверяем его на уникальность.
         await check_name_duplicate(obj_in.name, session)
 
-    # Передаём в корутину все данные, необходимые для обновления объекта.
     meeting_room = await meeting_room_crud.update(
         meeting_room, obj_in, session
     )
@@ -104,7 +94,6 @@ async def remove_meeting_room(
     """
     Роутер для удаления данных. Только для суперюзеров.
     """
-    # Вызываем корутину, проверяющую существование запрошенного объекта.
     meeting_room = await check_meeting_room_exists(
         meeting_room_id, session
     )
@@ -117,7 +106,6 @@ async def remove_meeting_room(
 @router.get(
     '/{meeting_room_id}/reservations',
     response_model=list[ReservationDB],
-    # Добавляем множество с полями, которые надо исключить из ответа.
     response_model_exclude={'user_id'},
 )
 async def get_reservations_for_room(

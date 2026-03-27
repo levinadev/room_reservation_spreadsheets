@@ -1,4 +1,3 @@
-# app/api/endpoints/reservaion.py
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
@@ -31,8 +30,6 @@ async def create_reservation(
         reservation.meetingroom_id, session
     )
     await check_reservation_intersections(
-        # Так как валидатор принимает **kwargs,
-        # аргументы должны быть переданы с указанием ключей.
         **reservation.model_dump(), session=session
     )
     new_reservation = await reservation_crud.create(
@@ -60,13 +57,10 @@ async def get_all_reservations(
 @router.get(
     '/my_reservations',
     response_model=list[ReservationDB],
-    # Добавляем множество с полями, которые надо исключить из ответа.
     response_model_exclude={'user_id'},
 )
 async def get_my_reservations(
     session: SessionDep,
-    # Передаём зависимость в аргументы функции, а не декоратора.
-    # В этой зависимости получаем обычного пользователя, а не суперюзера.
     user: Annotated[User, Depends(current_user)]
 ):
     """
@@ -111,23 +105,17 @@ async def update_reservation(
         # Новая зависимость.
         user: Annotated[User, Depends(current_user)],
 ):
-    # Проверяем, что запрошенный объект бронирования существует.
     reservation = await check_reservation_before_edit(
         reservation_id, session, user
     )
-    # Проверяем, что нет пересечений с другими бронированиями.
     await check_reservation_intersections(
-        # Новое время бронирования, распакованное на ключевые аргументы.
         **obj_in.model_dump(),
-        # id обновляемого объекта бронирования:
         reservation_id=reservation_id,
-        # id переговорки:
         meetingroom_id=reservation.meetingroom_id,
         session=session
     )
     reservation = await reservation_crud.update(
         db_obj=reservation,
-        # На обновление передаём объект класса ReservationUpdate.
         obj_in=obj_in,
         session=session,
     )

@@ -1,5 +1,3 @@
-# app/models/meeting_room.py
-
 from sqlalchemy import String, Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -20,5 +18,4 @@ class MeetingRoom(CommonMixin, Base):
         nullable=True,
         comment='Описание комнаты',
     )
-    # виртуальная связь в Python
     reservations: Mapped[list['Reservation']] = relationship(cascade='delete')

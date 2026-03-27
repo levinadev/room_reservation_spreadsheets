@@ -1,15 +1,12 @@
-# app/schemas/reservation.py
 from typing import ClassVar
 from pydantic import ConfigDict, Field, BaseModel, field_validator, model_validator
 from datetime import datetime, timedelta
 from typing_extensions import Self
 
 class ReservationBase(BaseModel):
-    # Константы с актуальной датой-временем, Pydantic не будет воспринимать как поля
     FROM_TIME: ClassVar[str] = (datetime.now() + timedelta(minutes=10)).isoformat(timespec='minutes')
     TO_TIME: ClassVar[str] = (datetime.now() + timedelta(hours=1)).isoformat(timespec='minutes')
 
-    # Поля модели
     from_reserve: datetime = Field(..., examples=[FROM_TIME])
     to_reserve: datetime = Field(..., examples=[TO_TIME])
 
