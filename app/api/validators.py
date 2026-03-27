@@ -1,4 +1,3 @@
-# app/api/validators.py
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -47,11 +46,10 @@ async def check_reservation_intersections(**kwargs) -> None:
 async def check_reservation_before_edit(
         reservation_id: int,
         session: AsyncSession,
-        # Новый параметр корутины.
         user: User,
 ) -> Reservation:
     """
-     Валидатор проверяет, существует ли запрошенный объект бронирования.
+    Валидатор проверяет, существует ли запрошенный объект бронирования.
     :param reservation_id:
     :param session:
     :return:
@@ -61,7 +59,6 @@ async def check_reservation_before_edit(
     )
     if not reservation:
         raise HTTPException(status_code=404, detail='Бронь не найдена!')
-    # Новая проверка и вызов исключения.
     if reservation.user_id != user.id and not user.is_superuser:
         raise HTTPException(
             status_code=403,

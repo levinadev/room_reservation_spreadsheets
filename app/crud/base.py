@@ -1,4 +1,3 @@
-# app/crud/base.py
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -6,8 +5,6 @@ from app.models import User
 
 class CRUDBase:
 
-    # Инициализатор класса на вход принимает модель,
-    # с которой нужно выполнить операции.
     def __init__(self, model):
         self.model = model
 
@@ -43,7 +40,6 @@ class CRUDBase:
         db_objs = await session.execute(select(self.model))
         return db_objs.scalars().all()
 
-    # Универсальный метод для добавления записи в базу:
     async def create(
         self,
         obj_in,
@@ -58,9 +54,7 @@ class CRUDBase:
         """
         obj_in_data = obj_in.model_dump()
 
-        # Если пользователь был передан...
         if user is not None:
-            # ...то дополняем словарь для создания модели ещё одним ключом:
             obj_in_data['user_id'] = user.id
 
         db_obj = self.model(**obj_in_data)
@@ -69,7 +63,6 @@ class CRUDBase:
         await session.refresh(db_obj)
         return db_obj
 
-    # Универсальный метод для обновления записи по id:
     async def update(
         self,
         db_obj,
@@ -96,7 +89,6 @@ class CRUDBase:
         await session.refresh(db_obj)
         return db_obj
 
-    # Ещё один универсальный метод, тоже пригодится:
     async def remove(
         self,
         db_obj,

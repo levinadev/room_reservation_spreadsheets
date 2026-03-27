@@ -1,4 +1,3 @@
-# app/schemas/meeting_room.py
 from pydantic import ConfigDict, Field, BaseModel, field_validator
 
 class MeetingRoomBase(BaseModel):
