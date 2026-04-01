@@ -1,0 +1,20 @@
+services:
+  backend:
+    image: annalevina/room_reservation_backend:latest
+    build: .
+    container_name: room-reservation-backend
+    restart: always
+    env_file:
+      - .env
+    expose:
+      - "8000"
+
+  nginx:
+    image: annalevina/room_reservation_nginx:latest
+    build: ./infra
+    container_name: room-reservation-proxy
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "8013:80"
