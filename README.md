@@ -32,3 +32,15 @@ http://localhost:8013/docs
 ```
 docker compose -f docker-compose.production.yml down
 ```
+
+## Технологии
+- **Backend:** Python 3.12, FastAPI, FastAPI Users
+- **Database:** SQLite (aiosqlite), SQLAlchemy (async), Alembic
+- **Интеграции:** Google API (aiogoogle)
+- **Сервер:** Uvicorn, Nginx
+- **Инфраструктура:** Docker, Docker Compose, GitHub Actions (CI/CD)
+
+## Автор
+- Имя: Анна
+- Email: anna45dd@yandex.ru
+- GitHub: https://github.com/levinadev
