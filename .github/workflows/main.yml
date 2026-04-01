@@ -3,7 +3,7 @@ name: Room Reservation CI/CD
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build_and_push_backend:
@@ -48,7 +48,7 @@ jobs:
     needs:
       - build_and_push_backend
       - build_and_push_nginx
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v3
       - name: Copy docker-compose.production.yml to server
